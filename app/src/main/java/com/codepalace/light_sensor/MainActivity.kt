@@ -20,11 +20,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         text = findViewById(R.id.tv_text)
         pb = findViewById(R.id.circularProgressBar)
+
 
         setUpSensorStuff()
     }
@@ -33,6 +35,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 
         brightness = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
+
+        sensorManager.registerListener(this, brightness, SensorManager.SENSOR_DELAY_NORMAL)
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
@@ -42,6 +46,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             text.text = "Sensor: $light1\n${brightness(light1)}"
             pb.setProgressWithAnimation(light1)
         }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        return
     }
 
     private fun brightness(brightness: Float): String {
@@ -56,19 +64,4 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        return
-    }
-
-    override fun onResume() {
-        super.onResume()
-        // Register a listener for the sensor.
-        sensorManager.registerListener(this, brightness, SensorManager.SENSOR_DELAY_NORMAL)
-    }
-
-
-    override fun onPause() {
-        super.onPause()
-        sensorManager.unregisterListener(this)
-    }
 }
