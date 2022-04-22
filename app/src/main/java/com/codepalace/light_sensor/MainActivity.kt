@@ -26,8 +26,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         text = findViewById(R.id.tv_text)
@@ -37,17 +35,20 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         setUpSensorStuff()
 
+        /* button start */
         btnStart.setOnClickListener {
             sensorManager.registerListener(this, brightness, SensorManager.SENSOR_DELAY_NORMAL)
             btnStart.isEnabled = false
             btnStop.isEnabled = true
         }
 
+        /* button stop */
         btnStop.setOnClickListener {
             sensorManager.unregisterListener(this)
             btnStart.isEnabled = true
             btnStop.isEnabled = false
             text.setText("Klik Tombol Start")
+            pb.setProgressWithAnimation(0f)
         }
     }
 
